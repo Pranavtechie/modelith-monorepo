@@ -1,0 +1,17 @@
+{
+	"name": "backend",
+	"type": "module",
+	"scripts": {
+		"dev": "bun run --watch src/index.ts",
+		"typecheck": "tsc"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "workspace:*",
+		"@types/bun": "^1.1.10",
+		"typescript": "5"
+	},
+	"dependencies": {
+		"elysia": "1"
+	},
+	"module": "src/index.ts"
+}
