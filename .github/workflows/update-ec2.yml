@@ -1,0 +1,35 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2
+        env:
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          EC2_USERNAME: ${{ secrets.EC2_USERNAME }}
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
+          REPO_URL: ${{ github.server_url }}/${{ github.repository }}.git
+        run: |
+          echo "$EC2_SSH_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $EC2_USERNAME@$EC2_HOST << EOF
+            # Navigate to the project directory (create if it doesn't exist)
+            cd ~/modelith-monorepo/
+
+            git fetch --all
+            git reset --hard origin/main
+
+            pnpm install
+
+            cd apps/backend
+
+            # Restart the server using PM2
+            pnpm run start:prod
+          EOF
+          rm -f private_key.pem
