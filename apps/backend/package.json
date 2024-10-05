@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "bun run --watch src/index.ts",
 		"build-elysia": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile server-executable-file src/index.ts",
-		"start:prod": "bun run build-elysia && pm2 start ecosystem.config.js",
+		"start:prod": "bun run build-elysia && pm2 start ecosystem.config.cjs",
 		"typecheck": "tsc"
 	},
 	"devDependencies": {
