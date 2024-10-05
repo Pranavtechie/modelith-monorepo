@@ -1,4 +1,3 @@
-"use client";
 import { api } from "@repo/libs";
 
 export default async function Home() {
