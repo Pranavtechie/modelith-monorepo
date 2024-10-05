@@ -1,4 +1,5 @@
 import { edenTreaty } from '@elysiajs/eden'
 import type { App } from 'backend'
+import env from "@repo/env"
 
-export const api: ReturnType<typeof edenTreaty<App>> = edenTreaty<App>('http://0.0.0.0:8080/')
+export const api: ReturnType<typeof edenTreaty<App>> = edenTreaty<App>(`${env.BACKEND_URL}`)
