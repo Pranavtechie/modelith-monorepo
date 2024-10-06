@@ -1,0 +1,88 @@
+generator kysely {
+    provider = "prisma-kysely"
+
+    // Optionally provide a destination directory for the generated file
+    // and a filename of your choice
+    output = "../src/db"
+    fileName = "types.ts"
+    // Optionally generate runtime enums to a separate file
+    enumFileName = "enums.ts"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String           @id @default(uuid())
+  email          String           @unique
+  password       String
+  name           String
+  role           Role             @default(STUDENT)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  assignments    Assignment[]     @relation("TeacherAssignments")
+  submissions    Submission[]
+  enrollments    ClassEnrollment[]
+}
+
+model Class {
+  id         String           @id @default(uuid())
+  name       String
+  inviteCode String           @unique
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  assignments Assignment[]
+  enrollments ClassEnrollment[]
+}
+
+model ClassEnrollment {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  class     Class    @relation(fields: [classId], references: [id])
+  classId   String
+  enrolledAt DateTime @default(now())
+
+  @@unique([userId, classId])
+}
+
+model Assignment {
+  id                String       @id @default(uuid())
+  title             String
+  description       String
+  datasetUrl        String
+  notebookUrl       String?
+  testDatasetUrl    String
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  dueDate           DateTime
+  teacher           User         @relation("TeacherAssignments", fields: [teacherId], references: [id])
+  teacherId         String
+  class            Class       @relation(fields: [classId], references: [id])
+  classId          String
+  submissions       Submission[]
+}
+
+model Submission {
+  id            String     @id @default(uuid())
+  notebookUrl   String
+  outputUrl     String
+  score         Float?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  user          User       @relation(fields: [userId], references: [id])
+  userId        String
+  assignment    Assignment @relation(fields: [assignmentId], references: [id])
+  assignmentId  String
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+}
+
+
+
