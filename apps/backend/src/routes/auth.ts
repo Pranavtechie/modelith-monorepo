@@ -19,8 +19,13 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     name: 'jwt',
     secret: process.env.JWT_SECRET!
   }))
-  .post('/login', async ({ body, set, cookie, jwt }) => {
+  .post('/login', async ({ body, set, cookie, jwt, request }) => {
     const { email, password } = body;
+
+    const url = new URL(request.url);
+
+    console.log(url.hostname)
+
 
     const user = await db
       .selectFrom('User')
@@ -42,12 +47,10 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict' as const,
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      domain: url.host
     };
 
-    if (process.env.NODE_ENV === 'production') {
-      cookieOptions.domain = 'modelith.com';
-    }
 
     cookie.auth?.set(cookieOptions);
 
@@ -59,7 +62,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       password: t.String()
     })
   })
-  .post('/register', async ({ body, set, jwt, cookie }) => {
+  .post('/register', async ({ body, set, jwt, cookie, request }) => {
     const { email, password, name, role = 'STUDENT' } = body;
 
     // Check if user already exists
@@ -67,6 +70,11 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       .selectFrom('User')
       .where('email', '=', email)
       .executeTakeFirst();
+
+    const url = new URL(request.url);
+
+
+
 
 
     if (existingUser) {
@@ -105,12 +113,9 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict' as const,
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      domain: url.host
     };
-
-    if (process.env.NODE_ENV === 'production') {
-      cookieOptions.domain = 'modelith.com';
-    }
 
     cookie.auth?.set(cookieOptions);
 
