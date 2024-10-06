@@ -6,13 +6,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import {
-	ChevronRight,
-	Menu,
-	Settings,
-	BookOpen,
-	GraduationCap,
-} from "lucide-react";
+import { ChevronRight, Menu, Settings, GraduationCap } from "lucide-react";
 
 const sidebarItems = [
 	{ name: "Classes", href: "/student/classes", icon: GraduationCap },
