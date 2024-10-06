@@ -3,11 +3,10 @@ import { db } from '../db/db'
 import { NotFoundError } from 'elysia'
 import { uuidv7 } from 'uuidv7';
 
-export const classRouter = new Elysia({ prefix: '' })
+export const classRouter = new Elysia({ prefix: '/class' })
   .get('/', () => 'hello schools')
-  .get('/:id', async ({ params }) => {
-    const userId = params.id;
-
+  .post('/procure', async ({ body }) => {
+    const { userId } = body;
     // First, check if the user exists
     const user = await db.selectFrom('User')
       .where('id', '=', userId)
@@ -31,8 +30,8 @@ export const classRouter = new Elysia({ prefix: '' })
 
     return userClasses;
   }, {
-    params: t.Object({
-      id: t.String()
+    body: t.Object({
+      userId: t.String()
     })
   })
   .post('/join', async ({ body }) => {

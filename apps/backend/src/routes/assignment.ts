@@ -3,7 +3,7 @@ import { db } from '../db/db'
 import { NotFoundError } from 'elysia'
 import { uuidv7 } from 'uuidv7';
 
-export const assignmentRouter = new Elysia({ prefix: '' })
+export const assignmentRouter = new Elysia({ prefix: '/assignment' })
     .get('/', () => {
         console.log('this is being printed');
         return 'hello assignments';

@@ -25,14 +25,9 @@ const app = new Elysia()
             name: t.String(),
         })
     })
-    .group('/api', app => app
-        .use(authRouter)
-        .group('/class', app => app
-            .use(classRouter)
-        )
-        .group('/assignment', app => app
-            .use(assignmentRouter)
-        ))
+    .use(authRouter)
+    .use(classRouter)
+    .use(assignmentRouter)
     .listen(8080)
 
 console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`)

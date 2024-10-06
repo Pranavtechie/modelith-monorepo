@@ -2,8 +2,23 @@ import { Elysia, t } from 'elysia'
 import { db } from '../db/db'
 import { uuidv7 } from "uuidv7";
 import { Role } from '../db/enums';
+import { jwt } from '@elysiajs/jwt'
+
+interface CookieOptions {
+  value: any;
+  httpOnly: boolean;
+  secure: boolean;
+  sameSite: "strict";
+  maxAge: number;
+  domain?: string;
+}
+
 
 export const authRouter = new Elysia({ prefix: '/auth' })
+  .use(jwt({
+    name: 'jwt',
+    secret: process.env.JWT_SECRET!
+  }))
   .post('/login', async ({ body, set, cookie, jwt, request }) => {
     const { email, password } = body;
 
@@ -122,22 +137,3 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     set.status = code === 'VALIDATION' ? 400 : 500
     return { error: error.message }
   })
-
-
-interface CookieOptions {
-  value: any;
-  httpOnly: boolean;
-  secure: boolean;
-  sameSite: "strict";
-  maxAge: number;
-  domain?: string;
-}
-
-let cookieOptions: CookieOptions = {
-  // ... other properties ...
-};
-
-if (process.env.NODE_ENV === 'production') {
-  cookieOptions.domain = 'modelith.com';
-}
-
