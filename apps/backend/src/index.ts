@@ -7,7 +7,7 @@ import { assignmentRouter } from './routes/assignment'
 
 const app = new Elysia()
     .use(cors({
-        origin: ['modelith.com', 'localhost:3000']
+        origin: ['modelith.com', 'localhost:3000', 'www.modelith.com']
     }
     ))
     .use(jwt({
