@@ -19,7 +19,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     name: 'jwt',
     secret: process.env.JWT_SECRET!
   }))
-  .post('/login', async ({ body, set, cookie, jwt, request }) => {
+  .post('/login', async ({ body, set, cookie, jwt }) => {
     const { email, password } = body;
 
     const user = await db
@@ -49,7 +49,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       cookieOptions.domain = 'modelith.com';
     }
 
-    cookie.auth.set(cookieOptions);
+    cookie.auth?.set(cookieOptions);
 
     const { password: _, ...userWithoutPassword } = user;
     return { success: true, user: userWithoutPassword };
@@ -112,7 +112,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
       cookieOptions.domain = 'modelith.com';
     }
 
-    cookie.auth.set(cookieOptions);
+    cookie.auth?.set(cookieOptions);
 
     return { success: true, user: newUser };
   }, {
@@ -128,7 +128,7 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     return { message: 'Authentication is working fine' }
   })
   .post('/logout', ({ cookie, set }) => {
-    cookie.auth.remove()
+    cookie.auth?.remove()
     set.status = 200
     return { message: 'Logged out successfully' }
   })
@@ -137,3 +137,5 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     set.status = code === 'VALIDATION' ? 400 : 500
     return { error: error.message }
   })
+
+
