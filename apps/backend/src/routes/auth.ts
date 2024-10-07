@@ -8,10 +8,12 @@ interface CookieOptions {
   value: any;
   httpOnly: boolean;
   secure: boolean;
-  sameSite: "strict";
+  sameSite: "none" | "lax";
   maxAge: number;
   domain?: string;
 }
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 
 export const authRouter = new Elysia({ prefix: '/auth' })
@@ -37,16 +39,20 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     }
 
     const token = await jwt.sign({ userId: user.id });
+
     const cookieOptions: CookieOptions = {
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict' as const,
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      secure: isProduction, // Secure in production, not in development
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site in production, 'lax' in development
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      domain: isProduction ? '.modelith.com' : undefined, // Domain for production, undefined for development
     };
 
     if (process.env.NODE_ENV === 'production') {
       cookieOptions.domain = '.modelith.com';
+    } else {
+      cookieOptions.domain = 'localhost:8080'
     }
 
     cookie.auth?.set(cookieOptions);
@@ -103,13 +109,16 @@ export const authRouter = new Elysia({ prefix: '/auth' })
     const cookieOptions: CookieOptions = {
       value: token,
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict' as const,
-      maxAge: 7 * 24 * 60 * 60 // 7 days
+      secure: isProduction, // Secure in production, not in development
+      sameSite: isProduction ? 'none' : 'lax', // 'none' for cross-site in production, 'lax' in development
+      maxAge: 7 * 24 * 60 * 60, // 7 days
+      domain: isProduction ? '.modelith.com' : undefined, // Domain for production, undefined for development
     };
 
     if (process.env.NODE_ENV === 'production') {
       cookieOptions.domain = '.modelith.com';
+    } else {
+      cookieOptions.domain = 'localhost:8080'
     }
 
     cookie.auth?.set(cookieOptions);

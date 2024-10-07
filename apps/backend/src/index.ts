@@ -5,9 +5,17 @@ import { classRouter } from './routes/class'
 import { jwt } from '@elysiajs/jwt'
 import { assignmentRouter } from './routes/assignment'
 
+const isProduction = process.env.NODE_ENV === 'production';
+
+const allowedOrigins = isProduction
+    ? ['https://www.modelith.com', 'https://modelith.com']
+    : ['http://localhost:3000'];
+
 const app = new Elysia()
     .use(cors({
-        origin: ['modelith.com', 'localhost:3000', 'www.modelith.com']
+        origin: allowedOrigins,
+        credentials: true
+
     }
     ))
     .use(jwt({
