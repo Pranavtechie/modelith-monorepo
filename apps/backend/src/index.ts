@@ -8,8 +8,8 @@ import { assignmentRouter } from './routes/assignment'
 const isProduction = process.env.NODE_ENV === 'production';
 
 const allowedOrigins = isProduction
-    ? ['https://www.modelith.com', 'https://modelith.com']
-    : ['http://localhost:3000'];
+    ? ['www.modelith.com', 'modelith.com']
+    : ['localhost:3000'];
 
 const app = new Elysia()
     .use(cors({
