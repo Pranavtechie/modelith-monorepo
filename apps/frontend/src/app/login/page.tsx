@@ -14,24 +14,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { api } from "@repo/libs";
 import { useToast } from "@/hooks/use-toast";
+import { useLocalStorage } from "@uidotdev/usehooks";
+import type { User } from "@/types/user";
+import Link from "next/link";
 
 export default function Component() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const router = useRouter();
 	const { toast } = useToast();
+	const [userData, addUserData] = useLocalStorage<User>("user");
+	const [auth, addAuth] = useLocalStorage<string>("auth", "");
 
-	// Check if the user is already logged in
 	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem("user") || "null");
-		if (user) {
-			if (user.role === "STUDENT") {
+		if (auth?.length > 0) {
+			if (userData.role === "STUDENT") {
 				router.push("/student/dashboard");
-			} else if (user.role === "TEACHER") {
+			} else if (userData.role === "TEACHER") {
 				router.push("/teacher/dashboard");
 			}
 		}
-	}, [router]);
+	}, [router, userData, auth]);
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -53,7 +56,10 @@ export default function Component() {
 			return;
 		}
 
-		localStorage.setItem("user", JSON.stringify(data.user));
+		if (data.authToken) {
+			addAuth(data.authToken);
+			addUserData(data.user);
+		}
 	};
 
 	return (
@@ -95,6 +101,9 @@ export default function Component() {
 							Sign In
 						</Button>
 					</form>
+					<Link href="/register">
+						<div className="hover:underline text-sm mt-4 text-center text-gray-700">{`Don't have an account? Register`}</div>
+					</Link>
 				</CardContent>
 			</Card>
 		</div>

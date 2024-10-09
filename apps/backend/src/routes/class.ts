@@ -2,12 +2,19 @@ import { Elysia, t } from 'elysia'
 import { db } from '../db/db'
 import { NotFoundError } from 'elysia'
 import { uuidv7 } from 'uuidv7';
+import { authValidationRouter } from './authValidation';
+
+
+interface User {
+  userId: string
+}
 
 export const classRouter = new Elysia({ prefix: '/class' })
+  .use(authValidationRouter)
   .get('/', () => 'hello schools')
-  .post('/procure', async ({ body }) => {
-    const { userId } = body;
-    // First, check if the user exists
+  .post('/procure', async ({ User }) => {
+    const { userId } = User as unknown as User;
+
     const user = await db.selectFrom('User')
       .where('id', '=', userId)
       .selectAll()

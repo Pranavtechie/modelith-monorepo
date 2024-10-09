@@ -8,6 +8,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useRouter } from "next/navigation";
 import { api } from "@repo/libs";
 import { useToast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 export default function SignUpPage() {
 	const router = useRouter();
@@ -20,6 +21,7 @@ export default function SignUpPage() {
 		password: "",
 		confirmPassword: "",
 	});
+
 	const [error, setError] = useState("");
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -29,16 +31,6 @@ export default function SignUpPage() {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setError("");
-
-		if (
-			!formData.fullName ||
-			!formData.email ||
-			!formData.password ||
-			!formData.confirmPassword
-		) {
-			setError("All fields are required");
-			return;
-		}
 
 		if (formData.password !== formData.confirmPassword) {
 			setError("Passwords do not match");
@@ -69,36 +61,11 @@ export default function SignUpPage() {
 			description: "Your account has been created successfully",
 		});
 
+		if (data.authToken) {
+			localStorage.setItem("auth", data?.authToken);
+		}
+
 		router.push("/student/dashboard");
-
-		// try {
-		// 	const response = await fetch(
-		// 		`${env.BACKEND_URL}/api/auth/register`,
-		// 		{
-		// 			method: "POST",
-		// 			headers: {
-		// 				"Content-Type": "application/json",
-		// 			},
-		// 			body: JSON.stringify({
-		// 				name: formData.fullName,
-		// 				email: formData.email,
-		// 				password: formData.password,
-		// 				role: "STUDENT",
-		// 			}),
-		// 		}
-		// 	);
-
-		// 	if (response.ok) {
-		// 		console.log("User registered successfully");
-		// 		router.push("/student/dashboard");
-		// 	} else {
-		// 		const data = await response.json();
-		// 		setError(data.message || "Registration failed");
-		// 	}
-		// } catch (error) {
-		// 	console.error("Error during registration:", error);
-		// 	setError("An error occurred during registration");
-		// }
 	};
 
 	return (
@@ -122,6 +89,7 @@ export default function SignUpPage() {
 							placeholder="John Doe"
 							value={formData.fullName}
 							onChange={handleChange}
+							required
 						/>
 					</div>
 					<div className="mb-4">
@@ -133,6 +101,7 @@ export default function SignUpPage() {
 							placeholder="john@example.com"
 							value={formData.email}
 							onChange={handleChange}
+							required
 						/>
 					</div>
 					<div className="mb-4">
@@ -144,6 +113,7 @@ export default function SignUpPage() {
 							placeholder="••••••••"
 							value={formData.password}
 							onChange={handleChange}
+							required
 						/>
 					</div>
 					<div className="mb-6">
@@ -157,6 +127,7 @@ export default function SignUpPage() {
 							placeholder="••••••••"
 							value={formData.confirmPassword}
 							onChange={handleChange}
+							required
 						/>
 					</div>
 					{error && (
@@ -167,6 +138,10 @@ export default function SignUpPage() {
 					<Button type="submit" className="w-full">
 						Sign Up
 					</Button>
+
+					<Link href="/login">
+						<div className="hover:underline text-sm mt-4 text-center text-gray-700">{`Already have an account? Login`}</div>
+					</Link>
 				</form>
 			</div>
 		</div>
