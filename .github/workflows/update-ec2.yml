@@ -30,6 +30,7 @@ jobs:
             cd apps/backend
 
             # Restart the server using PM2
+            pnpm run compile
             pnpm run start:prod
           EOF
           rm -f private_key.pem
