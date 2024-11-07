@@ -4,8 +4,10 @@ import { authRouter } from './routes/auth';
 import { classRouter } from './routes/class';
 import { jwt } from '@elysiajs/jwt';
 import { assignmentRouter } from './routes/assignment';
+import { swagger } from '@elysiajs/swagger';
 
 const app = new Elysia()
+    .use(swagger())
     .use(cors({
         origin: ['.modelith.com', 'localhost'],
         credentials: true
