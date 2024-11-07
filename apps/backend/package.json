@@ -5,7 +5,7 @@
 	"scripts": {
 		"dev": "bun run --watch src/index.ts",
 		"compile": "bun build src/index.ts --target bun --outdir ./dist",
-		"start:prod": "pm2 start ecosystem.config.cjs",
+		"start:prod": "bun --watch run dist/index.js",
 		"typecheck": "tsc"
 	},
 	"devDependencies": {

@@ -31,7 +31,7 @@ jobs:
 
             # Restart the server using PM2
             pnpm run compile
-            bun --watch run dist/index.js
-            
+            pnpm run start:prod  > output.log 2>&1 &
+
           EOF
           rm -f private_key.pem
