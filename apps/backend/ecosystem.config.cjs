@@ -3,7 +3,7 @@ module.exports = {
 		{
 			name: "modelith-monorepo-backend",
 			script: "bun dist/index.js",
-			interpreter: "bun",
+			interpreter: "none",
 			env: {
 				NODE_ENV: "production",
 			},
