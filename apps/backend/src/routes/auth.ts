@@ -4,7 +4,10 @@ import { uuidv7 } from "uuidv7";
 import { Role } from '../db/enums';
 import { jwt } from '@elysiajs/jwt'
 
-
+// make a new router here 
+// this router will be used for all authentication related routes
+// it will have a prefix of /auth
+// it will have 3 routes
 export const authRouter = new Elysia({ prefix: '/auth' })
   .use(jwt({
     name: 'jwt',
