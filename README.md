@@ -1,15 +1,14 @@
-# modelith-monorepo
+# Modelith
 
-To install dependencies:
+This repo maintains the modelith codebase.
 
-```bash
-bun install
-```
+This is a bun workspace based monorepo.
 
-To run:
+### Packages
 
-```bash
-bun run index.ts
-```
+1. `core` => The core code for Tree-edit Distance comparision and parsers for different languages
+2. `cli` => Command line interface for modelith for local execution
+3. `frontend` => The hosted version of the app
+4. `backend` => The backend server (can be used locally or use the cloud version)
 
-This project was created using `bun init` in bun v1.2.19. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+The codebase is being migrated for a single project into a proper monorepo. This tool is being heavily developed and not yet ready for testing or usage.
